@@ -2,6 +2,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import { auth } from "../../firebase/firebase.init";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { Link } from "react-router";
 
 const Register = () => {
   const [success, setSuccess] = useState(false);
@@ -12,14 +13,15 @@ const Register = () => {
     event.preventDefault();
     const email = event.target.email.value;
     const password = event.target.password.value;
-    console.log("register click", email, password);
+    const terms = event.target.terms.checked;
+    console.log("register click", email, password, terms);
 
     const length6Pattern = /^.{6,}$/;
     const casePattern = /^(?=.*[a-z])(?=.*[A-Z]).+$/;
     const specialCharPattern = /^(?=.*[!@#$%^&*(),.?":{}|<>]).+$/;
 
     if (!length6Pattern.test(password)) {
-      console.log("password didnt match");
+      console.log("password did not match");
       setError("password must be 6 character or longer");
       return;
     } else if (!casePattern.test(password)) {
@@ -36,6 +38,11 @@ const Register = () => {
 
     setError("");
     setSuccess(false);
+
+    if(!terms){
+        setError('please accept our terms and condition');
+        return;
+    }
 
     createUserWithEmailAndPassword(auth, email, password)
       .then((result) => {
@@ -88,7 +95,9 @@ const Register = () => {
                 </div>
                 <div>
                   <label class="label">
-                    <input type="checkbox" class="checkbox" />
+                    <input type="checkbox" 
+                    name="terms"
+                    class="checkbox" />
                     Accept Our Terms and Conditions
                   </label>
                 </div>
@@ -102,6 +111,7 @@ const Register = () => {
               )}
               {error && <p className="text-red-500">{error}</p>}
             </form>
+            <p>Already have an account? Please <Link className="text-blue-400 underline" to="/login">Login</Link></p>
           </div>
         </div>
       </div>
