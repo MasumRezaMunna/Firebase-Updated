@@ -12,6 +12,24 @@ const Register = () => {
         const password = event.target.password.value;
         console.log('register click', email, password)
 
+        const length6Pattern = /^.{6,}$/;
+        const casePattern = /^(?=.*[a-z])(?=.*[A-Z]).+$/;
+        const specialCharPattern = /^(?=.*[!@#$%^&*(),.?":{}|<>]).+$/;
+
+        if(!length6Pattern.test(password)){
+            console.log('password didnt match');
+            setError('password must be 6 character or longer');
+            return;
+        }
+        else if (!casePattern.test(password)){
+            setError('password must have at least one uppercase and one lower case character')
+            return;
+        }
+        else if(!specialCharPattern.test(password)){
+            setError('password must contain at least one special character (e.g. ! @ # $ % ^ & *).')
+            return;
+        }
+
         setError('');
         setSuccess(false);
 
